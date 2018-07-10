@@ -45,13 +45,10 @@ final class ContainerBasedContainerAccessor implements ContainerAccessor
         if (!$this->container->isFrozen()) {
             $parameterBag = clone $parameterBag;
             $parameterBag->resolve();
-
-            // Values are automatically unescaped during resolving, need to revert it
-            $parameterBag->add(array_map(function ($unescapedValue) use ($parameterBag) {
-                return $parameterBag->escapeValue($unescapedValue);
-            }, $parameterBag->all()));
         }
 
-        return $parameterBag->all();
+        return array_map(function ($unescapedValue) use ($parameterBag) {
+            return $parameterBag->escapeValue($unescapedValue);
+        }, $parameterBag->all());
     }
 }
